@@ -1,0 +1,33 @@
+# Local development — mirrors K8s topology without the overhead
+
+services:
+  orchestrator:
+    build: ./orchestrator
+    ports:
+      - "8000:8000"
+    environment:
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - JWT_SECRET=dev-secret
+      - AWS_REGION=us-east-1
+      - S3_BUCKET_NAME=medresearch-documents-dev
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+    depends_on:
+      - integration-service
+
+  integration-service:
+    build: ./integration-service
+    ports:
+      - "5000:5000"
+    environment:
+      - JWT_SECRET=dev-secret
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_ORCHESTRATOR_URL=http://localhost:8000
+      - VITE_INTEGRATION_URL=http://localhost:5000
+    depends_on:
+      - orchestrator
