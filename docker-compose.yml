@@ -1,5 +1,4 @@
 # Local development — mirrors K8s topology without the overhead
-
 services:
   orchestrator:
     build: ./orchestrator
@@ -16,7 +15,7 @@ services:
       - integration-service
 
   integration-service:
-    build: ./integration-service
+    build: ./integration_service
     ports:
       - "5001:5000"
     environment:
@@ -31,3 +30,4 @@ services:
       - VITE_INTEGRATION_URL=http://localhost:5000
     depends_on:
       - orchestrator
+
